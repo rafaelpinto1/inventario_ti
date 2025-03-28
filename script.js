@@ -74,10 +74,60 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Exibe a splash screen por 3 segundos e depois esconde
-    setTimeout(function () {
-        splashScreen.style.display = "none"; // Esconde a splash screen
-    }, 3000);
+    // Função para iniciar um novo funcionário
+    novoFuncionarioBtn.addEventListener("click", function() {
+        matriculaInput.value = "";
+        nomeInput.value = "";
+        setorSelect.value = "compras";
+        codigoPatrimonioInput.value = "";
+        itemTypeSelect.value = "desktop";
+        currentMatricula = ""; // Reseta a matrícula para permitir adicionar um novo funcionário
+    });
+
+    // Função para exportar para Excel
+    exportarExcelBtn.addEventListener("click", function() {
+        // Verifica se há dados na variável funcionarios
+        if (Object.keys(funcionarios).length === 0) {
+            alert("Não há dados para exportar!");
+            return;
+        }
+
+        // Inicializa a estrutura de dados para exportação
+        let tableData = [["Matrícula", "Nome", "Setor", "Desktop", "Notebook", "Monitor", "Teclado", "Webcam", "Headset", "Nobreak", "Leitor de Código de Barras"]];
+
+        // Coleta os dados dos funcionários e organiza nas colunas corretas
+        for (const matricula in funcionarios) {
+            const funcionario = funcionarios[matricula];
+            const rowData = [
+                matricula, 
+                funcionario.nome, 
+                funcionario.setor, 
+                funcionario.itens.desktop.join("<br>"), 
+                funcionario.itens.notebook.join("<br>"), 
+                funcionario.itens.monitor.join("<br>"), 
+                funcionario.itens.teclado.join("<br>"), 
+                funcionario.itens.webcam.join("<br>"), 
+                funcionario.itens.headset.join("<br>"), 
+                funcionario.itens.nobreak.join("<br>"),
+                funcionario.itens.leitorCodigoBarra.join("<br>") // Incluindo Leitor de Código de Barras
+            ];
+            tableData.push(rowData);
+        }
+
+        // Cria um arquivo Excel
+        const worksheet = XLSX.utils.aoa_to_sheet(tableData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Inventário");
+        XLSX.writeFile(workbook, "inventario.xlsx");
+    });
+
+    // Botão para iniciar a câmera (necessário no iOS)
+    const iniciarCameraBtn = document.getElementById('iniciar-camera');
+    if (iniciarCameraBtn) {
+        iniciarCameraBtn.addEventListener('click', function () {
+            startCamera();
+        });
+    }
 
     // Função para adicionar um item à tabela
     adicionarItemBtn.addEventListener("click", function() {
@@ -150,57 +200,5 @@ document.addEventListener("DOMContentLoaded", function () {
             delete funcionarios[matricula];
             itensTabela.deleteRow(row.rowIndex - 1); // Remove a linha do funcionário
         });
-    });
-
-    // Função para iniciar um novo funcionário
-    novoFuncionarioBtn.addEventListener("click", function() {
-        matriculaInput.value = "";
-        nomeInput.value = "";
-        setorSelect.value = "compras";
-        codigoPatrimonioInput.value = "";
-        itemTypeSelect.value = "desktop";
-        currentMatricula = ""; // Reseta a matrícula para permitir adicionar um novo funcionário
-    });
-
-    // Função para exportar para Excel
-    exportarExcelBtn.addEventListener("click", function() {
-        // Verifica se há dados na variável funcionarios
-        if (Object.keys(funcionarios).length === 0) {
-            alert("Não há dados para exportar!");
-            return;
-        }
-
-        // Inicializa a estrutura de dados para exportação
-        let tableData = [["Matrícula", "Nome", "Setor", "Desktop", "Notebook", "Monitor", "Teclado", "Webcam", "Headset", "Nobreak", "Leitor de Código de Barras"]];
-
-        // Coleta os dados dos funcionários e organiza nas colunas corretas
-        for (const matricula in funcionarios) {
-            const funcionario = funcionarios[matricula];
-            const rowData = [
-                matricula, 
-                funcionario.nome, 
-                funcionario.setor, 
-                funcionario.itens.desktop.join("<br>"), 
-                funcionario.itens.notebook.join("<br>"), 
-                funcionario.itens.monitor.join("<br>"), 
-                funcionario.itens.teclado.join("<br>"), 
-                funcionario.itens.webcam.join("<br>"), 
-                funcionario.itens.headset.join("<br>"), 
-                funcionario.itens.nobreak.join("<br>"),
-                funcionario.itens.leitorCodigoBarra.join("<br>") // Incluindo Leitor de Código de Barras
-            ];
-            tableData.push(rowData);
-        }
-
-        // Cria um arquivo Excel
-        const worksheet = XLSX.utils.aoa_to_sheet(tableData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Inventário");
-        XLSX.writeFile(workbook, "inventario.xlsx");
-    });
-
-    // Botão para abrir a câmera (necessário no iOS)
-    document.getElementById('iniciar-camera').addEventListener('click', function () {
-        startCamera();
     });
 });
