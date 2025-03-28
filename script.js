@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Toca o som de beep quando o código for lido
             tocarSom();
 
-            // Garantir que o campo permaneça **sempre editável**
+            // Garantir que o campo permaneça **sempre editável** após o beep
             codigoPatrimonioInput.readOnly = false; // Mantém o campo editável após o beep
         });
     }
