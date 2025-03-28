@@ -74,14 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Função para esconder a splash screen depois de 3 segundos ou após iniciar a câmera
-    async function hideSplashScreen() {
-        splashScreen.style.display = "none"; // Esconde a splash screen
-        await startCamera(); // Inicia a câmera após 3 segundos
-    }
-
     // Exibe a splash screen por 3 segundos e depois esconde
-    setTimeout(hideSplashScreen, 3000); // Tempo para mostrar a splash screen (3 segundos)
+    setTimeout(function () {
+        splashScreen.style.display = "none"; // Esconde a splash screen
+    }, 3000);
 
     // Função para adicionar um item à tabela
     adicionarItemBtn.addEventListener("click", function() {
@@ -201,5 +197,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Inventário");
         XLSX.writeFile(workbook, "inventario.xlsx");
+    });
+
+    // Botão para abrir a câmera (necessário no iOS)
+    document.getElementById('iniciar-camera').addEventListener('click', function () {
+        startCamera();
     });
 });
