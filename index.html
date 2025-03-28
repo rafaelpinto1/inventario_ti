@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leitura de Patrimônio</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div class="splash-screen" id="splash-screen">
+    <img src="logo.svg" alt="Logo">
+    <p>GSILVA</p>
+    <br><br>
+    <h5>Desenvolvido por Rafael Pinto</h5>
+  </div>
+
+  <!-- Container Principal -->
+  <div class="container">
+    <h1>Inventário de Patrimônios</h1>
+
+    <!-- Formulário de dados do funcionário -->
+    <div class="form-group">
+      <label for="matricula">Matrícula:</label>
+      <input type="tel" id="matricula" placeholder="Digite a matrícula" pattern="[0-9]*" inputmode="numeric" required>
+    </div>
+
+    <div class="form-group">
+      <label for="nome">Nome do Funcionário:</label>
+      <input type="text" id="nome" placeholder="Digite o nome do funcionário">
+    </div>
+
+    <div class="form-group">
+      <label for="setor">Setor:</label>
+      <select id="setor">
+        <option value="compras">Compras</option>
+        <option value="contabilidade">Contabilidade</option>
+        <option value="comercial">Comercial</option>
+        <option value="diretoria">Diretoria</option>
+        <option value="financeiro">Financeiro</option>
+        <option value="rh-dp">RH/DP</option>
+        <option value="armazem">Armazém</option>
+        <option value="almoxarifado">Almoxarifado</option>
+        <option value="operacional">Operacional</option>
+        <option value="informatica">Informática</option>
+        <option value="oficina">Oficina</option>
+      </select>
+    </div>
+
+    <!-- Scanner de código de barras -->
+    <div id="scanner-container">
+      <div id="scanner-wrapper">
+        <video id="scanner-video" width="100%" height="100%"></video>
+        <div id="scanner-line"></div>
+      </div>
+    </div>
+
+    <button id="start-scan">Iniciar Leitura de Patrimônio</button>
+
+    <!-- Campo para código de barras -->
+    <div class="form-group">
+      <label for="codigo-patrimonio">Código de Patrimônio:</label>
+      <input type="text" id="codigo-patrimonio" placeholder="Código do patrimônio" readonly>
+    </div>
+
+    <!-- Seleção de tipo de item -->
+    <div class="form-group">
+      <label for="item-type">Escolha o tipo de item:</label>
+      <select id="item-type">
+        <option value="desktop">Desktop</option>
+        <option value="notebook">Notebook</option>
+        <option value="monitor">Monitor</option>
+        <option value="teclado">Teclado</option>
+        <option value="webcam">Webcam</option>
+        <option value="headset">Headset</option>
+        <option value="nobreak">Nobreak</option>
+      </select>
+    </div>
+
+    <button id="adicionar-item">Adicionar Item</button>
+    <br>
+    <button id="novo-funcionario">Novo Funcionário</button>
+
+    <!-- Tabela de itens registrados -->
+    <div class="table-container">
+      <h3>Itens Registrados</h3>
+      <table id="itens-tabela">
+        <thead>
+          <tr>
+            <th>Matricula</th>
+            <th>Nome do Funcionário</th>
+            <th>Setor</th>
+            <th>Desktop</th>
+            <th>Notebook</th>
+            <th>Monitor</th>
+            <th>Teclado</th>
+            <th>Webcam</th>
+            <th>Headset</th>
+            <th>Nobreak</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <button id="exportar-excel">Exportar para Excel</button>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
