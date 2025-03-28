@@ -16,6 +16,17 @@ document.addEventListener("DOMContentLoaded", function () {
     let funcionarios = {}; // Objeto para armazenar os itens por funcionário
     let currentMatricula = ""; // Matrícula do funcionário atual
 
+    // Pré-carregar o som de beep
+    const beepSound = document.getElementById('beep-sound');
+
+    // Função para tocar o som do "beep" quando um código for lido
+    function tocarSom() {
+        beepSound.currentTime = 0;  // Reseta o áudio (caso tenha tocado anteriormente)
+        beepSound.play().catch((error) => {
+            console.error("Erro ao tentar reproduzir o som:", error);
+        }); // Reproduz o som
+    }
+
     // Função para inicializar a câmera
     async function startCamera() {
         try {
@@ -55,8 +66,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const codigo = result.codeResult.code;
             codigoPatrimonioInput.value = codigo; // Preenche o campo com o código do patrimônio
 
-            // Garantir que o campo permanece editável mesmo após o preenchimento
-            codigoPatrimonioInput.readOnly = false; // Torna o campo editável
+            // Toca o som de beep quando o código for lido
+            tocarSom();
+
+            // Garantir que o campo permaneça **sempre editável**
+            codigoPatrimonioInput.readOnly = false; // Mantém o campo editável após o beep
         });
     }
 
@@ -95,7 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     teclado: [],
                     webcam: [],
                     headset: [],
-                    nobreak: []
+                    nobreak: [],
+                    leitorCodigoBarra: [] // Adicionando a propriedade para o Leitor de Código de Barras
                 }
             };
         }
@@ -108,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!row) {
             row = itensTabela.insertRow();
-            row.innerHTML = `
+            row.innerHTML = ` 
               <td>${matricula}</td>
               <td>${nome}</td>
               <td>${setor}</td>
@@ -119,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <td id="webcam-${matricula}"></td>
               <td id="headset-${matricula}"></td>
               <td id="nobreak-${matricula}"></td>
+              <td id="leitor-codigo-barra-${matricula}"></td> <!-- Coluna do Leitor de Código de Barras -->
               <td><button class="delete-funcionario">Excluir</button></td>
             `;
         }
@@ -159,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Inicializa a estrutura de dados para exportação
-        let tableData = [["Matrícula", "Nome", "Setor", "Desktop", "Notebook", "Monitor", "Teclado", "Webcam", "Headset", "Nobreak"]];
+        let tableData = [["Matrícula", "Nome", "Setor", "Desktop", "Notebook", "Monitor", "Teclado", "Webcam", "Headset", "Nobreak", "Leitor de Código de Barras"]];
 
         // Coleta os dados dos funcionários e organiza nas colunas corretas
         for (const matricula in funcionarios) {
@@ -174,7 +190,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 funcionario.itens.teclado.join("<br>"), 
                 funcionario.itens.webcam.join("<br>"), 
                 funcionario.itens.headset.join("<br>"), 
-                funcionario.itens.nobreak.join("<br>")
+                funcionario.itens.nobreak.join("<br>"),
+                funcionario.itens.leitorCodigoBarra.join("<br>") // Incluindo Leitor de Código de Barras
             ];
             tableData.push(rowData);
         }
