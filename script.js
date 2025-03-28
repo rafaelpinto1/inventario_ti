@@ -1,30 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
     const splashScreen = document.getElementById("splash-screen");
     const scannerVideo = document.getElementById("scanner-video");
-
     const matriculaInput = document.getElementById("matricula");
     const nomeInput = document.getElementById("nome");
     const setorSelect = document.getElementById("setor");
     const codigoPatrimonioInput = document.getElementById("codigo-patrimonio");
     const itemTypeSelect = document.getElementById("item-type");
     const itensTabela = document.getElementById("itens-tabela").getElementsByTagName('tbody')[0];
-
     const adicionarItemBtn = document.getElementById("adicionar-item");
     const novoFuncionarioBtn = document.getElementById("novo-funcionario");
     const exportarExcelBtn = document.getElementById("exportar-excel");
-
+    const beepSound = document.getElementById('beep-sound');
     let funcionarios = {}; // Objeto para armazenar os itens por funcionário
     let currentMatricula = ""; // Matrícula do funcionário atual
-
-    // Pré-carregar o som de beep
-    const beepSound = document.getElementById('beep-sound');
+    let somHabilitado = true; // Habilita o som inicialmente
 
     // Função para tocar o som do "beep" quando um código for lido
     function tocarSom() {
-        beepSound.currentTime = 0;  // Reseta o áudio (caso tenha tocado anteriormente)
-        beepSound.play().catch((error) => {
-            console.error("Erro ao tentar reproduzir o som:", error);
-        }); // Reproduz o som
+        if (somHabilitado) {
+            beepSound.currentTime = 0;  // Reseta o áudio (caso tenha tocado anteriormente)
+            beepSound.play().catch((error) => {
+                console.error("Erro ao tentar reproduzir o som:", error);
+            }); // Reproduz o som
+        }
     }
 
     // Função para inicializar a câmera
@@ -65,11 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Quagga.onDetected(function(result) {
             const codigo = result.codeResult.code;
             codigoPatrimonioInput.value = codigo; // Preenche o campo com o código do patrimônio
-
-            // Toca o som de beep quando o código for lido
-            tocarSom();
-
-            // Garantir que o campo permaneça **sempre editável**
+            tocarSom(); // Toca o som de beep quando o código for lido
             codigoPatrimonioInput.readOnly = false; // Mantém o campo editável após o beep
         });
     }
@@ -168,16 +162,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Função para exportar para Excel
     exportarExcelBtn.addEventListener("click", function() {
-        // Verifica se há dados na variável funcionarios
         if (Object.keys(funcionarios).length === 0) {
             alert("Não há dados para exportar!");
             return;
         }
 
-        // Inicializa a estrutura de dados para exportação
         let tableData = [["Matrícula", "Nome", "Setor", "Desktop", "Notebook", "Monitor", "Teclado", "Webcam", "Headset", "Nobreak", "Leitor de Código de Barras"]];
-
-        // Coleta os dados dos funcionários e organiza nas colunas corretas
+        
         for (const matricula in funcionarios) {
             const funcionario = funcionarios[matricula];
             const rowData = [
@@ -191,12 +182,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 funcionario.itens.webcam.join("<br>"), 
                 funcionario.itens.headset.join("<br>"), 
                 funcionario.itens.nobreak.join("<br>"),
-                funcionario.itens.leitorCodigoBarra.join("<br>") // Incluindo Leitor de Código de Barras
+                funcionario.itens.leitorCodigoBarra.join("<br>")
             ];
             tableData.push(rowData);
         }
 
-        // Cria um arquivo Excel
         const worksheet = XLSX.utils.aoa_to_sheet(tableData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Inventário");

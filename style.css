@@ -94,14 +94,16 @@ button:hover {
     background-color: #0056b3;
 }
 
-/* Scanner */
+/*scanner*/
 #scanner-container {
     position: relative;
     width: 80%; /* Reduzindo o tamanho da câmera */
     margin: 0 auto;
-    height: 150px; /* Definindo altura bem mais fina para a câmera */
+    height: 200px; /* Ajustando a altura da câmera */
     background-color: #000;
     margin-bottom: 20px; /* Adicionando espaçamento abaixo da câmera */
+    border-radius: 30px; /* Arredondando as bordas da câmera */
+    overflow: hidden; /* Garantir que o conteúdo não ultrapasse as bordas */
 }
 
 #scanner-wrapper {
@@ -118,6 +120,7 @@ button:hover {
     width: 100%;
     height: 100%;
     object-fit: cover; /* Para cobrir toda a área do container */
+    border-radius: 30px; /* Arredondando as bordas da câmera */
 }
 
 #scanner-line {
@@ -125,9 +128,10 @@ button:hover {
     width: 60%; /* Linha centralizada e mais fina */
     height: 2px;
     background-color: red;
-    top: 50%; /* Centralizando a linha no meio da câmera */
+    top: 20%; /* Centralizando a linha no meio da câmera */
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%); /* Garantindo a centralização exata da linha */
+    z-index: 1; /* Garantir que a linha fique acima da imagem da câmera */
 }
 
 /* Tabela */
@@ -182,7 +186,7 @@ button#exportar-excel {
     }
 
     #scanner-wrapper {
-        height: 120px; /* Altura da câmera para celular ajustada */
+        height: 150px; /* Altura do scanner para celular ajustada */
         max-width: 100%;
     }
 
@@ -196,6 +200,10 @@ button#exportar-excel {
 
     button {
         font-size: 14px;
+    }
+
+    #scanner-container {
+        height: 60px; /* Tornando a câmera ainda mais fina para celular */
     }
 }
 
